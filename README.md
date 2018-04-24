@@ -1,6 +1,6 @@
 # WebRTC chat
 
-## Install
+## Install localy
 
 ```
 git clone git@gitlab.com:maliuk/WebRTC-chat.git
