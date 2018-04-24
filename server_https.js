@@ -13,7 +13,7 @@ var options = {
 
 var app = https.createServer(options, function (req, res) {
     file.serve(req, res);
-}).listen(1234);
+}).listen(443);
 
 
 var io = require('socket.io').listen(app);
