@@ -74,7 +74,7 @@ function gotRemoteStream(event) {
 ////////////////////////////////////////////////
 // Socket.io
 
-var hURL = window.location.protocol + "//" + window.location.host + "/" + window.location.pathname;
+var hURL = window.location.protocol + "//" + window.location.host + "/" + window.location.pathname ? window.location.pathname : "";
 console.log("Connecting to " + hURL);
 var socket = io.connect(hURL, {port: 1234});
 
