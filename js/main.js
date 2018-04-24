@@ -74,7 +74,7 @@ function gotRemoteStream(event) {
 ////////////////////////////////////////////////
 // Socket.io
 
-var socket = io.connect('', {port: 443});
+var socket = io.connect('', {port: 1234});
 
 function sendMessage(message) {
     socket.emit('message', message);
