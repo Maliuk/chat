@@ -17,6 +17,8 @@
         <link rel="stylesheet" href="css/main.css" />
         <!-- ./STYLES -->
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.0/socket.io.js"></script>
+
         <!-- MODERNIZR -->
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
         <!-- ./MODERNIZR -->
@@ -30,36 +32,38 @@
         <!-- PAGE WRAP -->
 
 
-            <!-- HEADER -->
-            <header>
+        <!-- HEADER -->
+        <header>
 
-            </header>
-            <!-- ./HEADER -->
-            
-            <div class="container bg">
-                <div class="row">
+        </header>
+        <!-- ./HEADER -->
 
-                    <div class="col-md-6">
-                        <div class="video-wraper">
-                            <video id="mine" autoplay></video>
-                        </div>
-                        <div class="video-wraper">
-                            <video id="yours" autoplay></video>
-                        </div>
+        <div class="container bg">
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div class="video-wraper">
+                        <video id="localVideo" autoplay></video>
                     </div>
-                    
-                    <div class="col-md-6">
-                        <ul id="chat" class="scroll">
-                            
-                        </ul>
-                        
-                        <form id="message-form">
-                            <input type="text" name="message" id="message" />
-                        </form>
+                    <div class="video-wraper">
+                        <video id="remoteVideo" autoplay></video>
                     </div>
-                    
+
+                    <button id="callButton" onclick="createOffer()">✆</button>
                 </div>
+
+                <div class="col-md-6">
+                    <ul id="chat" class="scroll">
+
+                    </ul>
+
+                    <form id="message-form">
+                        <input type="text" name="message" id="message" />
+                    </form>
+                </div>
+
             </div>
+        </div>
 
 
         <!-- FOOTER -->
