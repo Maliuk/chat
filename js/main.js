@@ -109,34 +109,40 @@ jQuery(document).ready(function ($) {
 
         if (message && message != '') {
 
-            socket.emit('chat message', message);
+            try {
+                socket.emit('chat message', message);
 
-            $chat.append('<li class="text-right"><span><span class="name">Me: </span>' + message + '<span></li>');
-            showMessage();
-            $('#message').val('');
-            audio.send_message.volume = 0.3;
-            audio.send_message.play();
+                $chat.append('<li class="text-right"><span><span class="name">Me: </span>' + message + '<span></li>');
+                showMessage();
+                $('#message').val('');
+                audio.send_message.volume = 0.3;
+                audio.send_message.play();
 
-            /*if (flag) {
-                flag = false;
-                setTimeout(function () {
-                    $chat.append('<li><span><span class="name">Bot: </span>' + botMessages[bm] + '<span></li>');
-                    showMessage();
-                    audio.recieve_message.volume = 0.3;
-                    audio.recieve_message.play();
-                    flag = true;
-                    bm++;
+                /*if (flag) {
+                 flag = false;
+                 setTimeout(function () {
+                 $chat.append('<li><span><span class="name">Bot: </span>' + botMessages[bm] + '<span></li>');
+                 showMessage();
+                 audio.recieve_message.volume = 0.3;
+                 audio.recieve_message.play();
+                 flag = true;
+                 bm++;
 
-                    if (bm >= botMessages.length)
-                        bm = 0;
+                 if (bm >= botMessages.length)
+                 bm = 0;
 
-                    var h = $chat[0].scrollHeight;
-                    $chat.scrollTop(h);
-                }, 1000);
-            }*/
+                 var h = $chat[0].scrollHeight;
+                 $chat.scrollTop(h);
+                 }, 1000);
+                 }*/
 
-            var h = $chat[0].scrollHeight;
-            $chat.scrollTop(h);
+                var h = $chat[0].scrollHeight;
+                $chat.scrollTop(h);
+            } catch (err)
+            {
+                console.log(err);
+            }
+
         }
         return false;
     });
