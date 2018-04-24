@@ -108,13 +108,16 @@ jQuery(document).ready(function ($) {
         var message = $('#message').val();
 
         if (message && message != '') {
+
+            socket.emit('chat message', message);
+
             $chat.append('<li class="text-right"><span><span class="name">Me: </span>' + message + '<span></li>');
             showMessage();
             $('#message').val('');
             audio.send_message.volume = 0.3;
             audio.send_message.play();
 
-            if (flag) {
+            /*if (flag) {
                 flag = false;
                 setTimeout(function () {
                     $chat.append('<li><span><span class="name">Bot: </span>' + botMessages[bm] + '<span></li>');
@@ -130,12 +133,25 @@ jQuery(document).ready(function ($) {
                     var h = $chat[0].scrollHeight;
                     $chat.scrollTop(h);
                 }, 1000);
-            }
+            }*/
 
             var h = $chat[0].scrollHeight;
             $chat.scrollTop(h);
         }
         return false;
+    });
+
+    socket.on('chat message', function(msg){
+        setTimeout(function () {
+            console.log(msg);
+            $chat.append('<li><span><span class="name">Opponent: </span>' + msg + '<span></li>');
+            showMessage();
+            audio.recieve_message.volume = 0.3;
+            audio.recieve_message.play();
+
+            var h = $chat[0].scrollHeight;
+            $chat.scrollTop(h);
+        }, 50);
     });
 
     var showMessage = function () {

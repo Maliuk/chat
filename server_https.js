@@ -32,6 +32,12 @@ io.sockets.on('connection', function (socket) {
         socket.broadcast.emit('message', message); // should be room only
     });
 
+    socket.on('chat message', function(msg){
+        console.log('chat message: ' + msg);
+        //io.emit('chat message', msg);
+        socket.broadcast.emit('chat message', msg);
+    });
+
     socket.on('create or join', function (room) {
         var numClients = io.sockets.clients(room).length;
 
