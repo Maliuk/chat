@@ -5,5 +5,8 @@
         "https": "^1.0.0",
         "node-static": "^0.7.10",
         "socket.io": "^2.1.0"
-    }
+    },
+	"scripts": {
+		"start": "node server_https.js"
+	}
 }
