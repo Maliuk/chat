@@ -4,7 +4,7 @@ var static = require('node-static');
 var file = new (static.Server)();
 
 var hskey = fs.readFileSync('key.pem');
-var hscert = fs.readFileSync('cert.pem');
+var hscert = fs.readFileSync('cert.cert');
 
 var options = {
     key: hskey,
@@ -28,7 +28,7 @@ io.sockets.on('connection', function (socket) {
     }
 
     socket.on('message', function (message) {
-        log('Got message: ', message);
+        console.log('Got message: ', message);
         socket.broadcast.emit('message', message); // should be room only
     });
 
@@ -41,8 +41,8 @@ io.sockets.on('connection', function (socket) {
     socket.on('create or join', function (room) {
         var numClients = io.sockets.clients(room).length;
 
-        log('Room ' + room + ' has ' + numClients + ' client(s)');
-        log('Request to create or join room', room);
+        console.log('Room ' + room + ' has ' + numClients + ' client(s)');
+        console.log('Request to create or join room', room);
 
         if (numClients == 0) {
             socket.join(room);

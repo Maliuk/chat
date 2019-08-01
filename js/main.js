@@ -7,17 +7,28 @@ var pc; // PeerConnection
 
 
 // Step 1. getUserMedia
-navigator.getUserMedia(
-        {audio: true, video: true},
-gotStream,
-        function (error) {
-            console.log(error)
-        }
-);
+/*navigator.getUserMedia(
+    {audio: false, video: true},
+    gotStream,
+    function (error) {
+        console.log(error)
+    }
+);*/
+
+navigator.mediaDevices
+    .getUserMedia({
+        audio: true,
+        video: true
+    })
+    .then(gotStream)
+    .catch(e => alert(`getUserMedia() error: ${e.name}`));
 
 function gotStream(stream) {
     document.getElementById("callButton").style.display = 'inline-block';
-    document.getElementById("localVideo").src = URL.createObjectURL(stream);
+    //document.getElementById("localVideo").src = URL.createObjectURL(stream);
+    const localVid = document.getElementById("localVideo");
+    localVid.muted = true;
+    localVid.srcObject = stream;
 
     pc = new PeerConnection(null);
     pc.addStream(stream);
@@ -29,11 +40,11 @@ function gotStream(stream) {
 // Step 2. createOffer
 function createOffer() {
     pc.createOffer(
-            gotLocalDescription,
-            function (error) {
-                console.log(error)
-            },
-            {'mandatory': {'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true}}
+        gotLocalDescription,
+        function (error) {
+            console.log(error)
+        },
+        {'mandatory': {'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true}}
     );
 }
 
@@ -41,11 +52,11 @@ function createOffer() {
 // Step 3. createAnswer
 function createAnswer() {
     pc.createAnswer(
-            gotLocalDescription,
-            function (error) {
-                console.log(error)
-            },
-            {'mandatory': {'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true}}
+        gotLocalDescription,
+        function (error) {
+            console.log(error)
+        },
+        {'mandatory': {'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true}}
     );
 }
 
@@ -53,6 +64,9 @@ function createAnswer() {
 function gotLocalDescription(description) {
     pc.setLocalDescription(description);
     sendMessage(description);
+	
+	console.log("Local description: ");
+	console.log(description);
 }
 
 function gotIceCandidate(event) {
@@ -67,7 +81,7 @@ function gotIceCandidate(event) {
 }
 
 function gotRemoteStream(event) {
-    document.getElementById("remoteVideo").src = URL.createObjectURL(event.stream);
+    document.getElementById("remoteVideo").srcObject = event.stream;
 }
 
 
@@ -92,6 +106,9 @@ socket.on('message', function (message) {
         var candidate = new IceCandidate({sdpMLineIndex: message.label, candidate: message.candidate});
         pc.addIceCandidate(candidate);
     }
+	
+	console.log("Remote description: ");
+	console.log(message);
 });
 
 jQuery(document).ready(function ($) {
@@ -138,8 +155,7 @@ jQuery(document).ready(function ($) {
 
                 var h = $chat[0].scrollHeight;
                 $chat.scrollTop(h);
-            } catch (err)
-            {
+            } catch (err) {
                 console.log(err);
             }
 
@@ -147,7 +163,7 @@ jQuery(document).ready(function ($) {
         return false;
     });
 
-    socket.on('chat message', function(msg){
+    socket.on('chat message', function (msg) {
         setTimeout(function () {
             console.log(msg);
             $chat.append('<li><span><span class="name">Opponent: </span>' + msg + '<span></li>');
