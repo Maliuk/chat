@@ -30,7 +30,7 @@ function gotStream(stream) {
     localVid.muted = true;
     localVid.srcObject = stream;
 
-    pc = new PeerConnection(null);
+    pc = new PeerConnection({ url: 'stun:stun2.1.google.com:19302' });
     pc.addStream(stream);
     pc.onicecandidate = gotIceCandidate;
     pc.onaddstream = gotRemoteStream;
