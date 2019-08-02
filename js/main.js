@@ -31,8 +31,14 @@ function gotStream(stream) {
     localVid.srcObject = stream;
 
     const configuration = {
-        iceServers: [{ url: 'stun:stun2.1.google.com:19302' }]
-    };
+        iceServers: [
+            { url: 'stun:stun1.l.google.com:19302' },
+            {
+                url: 'turn:numb.viagenie.ca',
+                credential: 'muazkh',
+                username: 'webrtc@live.com'
+            }]
+    }
 
     pc = new PeerConnection(configuration);
     pc.addStream(stream);
