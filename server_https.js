@@ -3,8 +3,8 @@ var fs = require('fs');
 var static = require('node-static');
 var file = new (static.Server)();
 
-var hskey = fs.readFileSync('key.pem');
-var hscert = fs.readFileSync('cert.cert');
+var hskey = fs.readFileSync('sslcert/key.pem');
+var hscert = fs.readFileSync('sslcert/cert.pem');
 
 var options = {
     key: hskey,
