@@ -38,10 +38,20 @@
         </header>
         <!-- ./HEADER -->
 
-        <div class="container bg">
+        <!-- LOGIN -->
+
+        <div id="login">
+            <input id="username" type="text" placeholder="type your username" />
+            <button id="login-button">login</button>
+        </div>
+
+        <!-- ./LOGIN -->
+
+
+        <div id="chat-container" class="container bg">
             <div class="row">
 
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <div class="video-wraper">
                         <video id="localVideo" autoplay></video>
                     </div>
@@ -52,7 +62,7 @@
                     <button id="callButton" onclick="createOffer()">✆</button>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <ul id="chat" class="scroll">
 
                     </ul>
@@ -60,6 +70,12 @@
                     <form id="message-form">
                         <input type="text" name="message" id="message" />
                     </form>
+                </div>
+
+                <div class="col-md-3">
+                    <ul id="contacts" class="scroll">
+
+                    </ul>
                 </div>
 
             </div>

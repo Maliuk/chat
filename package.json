@@ -2,11 +2,14 @@
     "name": "Dima",
     "devDependencies": {
         "fs": "0.0.1-security",
+        "gulp": "^4.0.2",
+        "gulp-sass": "^4.0.2",
         "https": "^1.0.0",
+        "node-sass": "^4.12.0",
         "node-static": "^0.7.10",
         "socket.io": "^2.1.0"
     },
-	"scripts": {
-		"start": "node server_https.js"
-	}
+    "scripts": {
+        "start": "node server_https.js"
+    }
 }

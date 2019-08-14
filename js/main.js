@@ -5,16 +5,7 @@ navigator.getUserMedia = navigator.getUserMedia || navigator.mozGetUserMedia || 
 
 var pc; // PeerConnection
 
-
 // Step 1. getUserMedia
-/*navigator.getUserMedia(
-    {audio: false, video: true},
-    gotStream,
-    function (error) {
-        console.log(error)
-    }
-);*/
-
 navigator.mediaDevices
     .getUserMedia({
         audio: true,
@@ -32,7 +23,7 @@ function gotStream(stream) {
 
     const configuration = {
         iceServers: [
-            { url: 'stun:stun1.l.google.com:19302' },
+            {url: 'stun:stun1.l.google.com:19302'},
             {
                 url: 'turn:numb.viagenie.ca',
                 credential: 'muazkh',
@@ -74,9 +65,9 @@ function createAnswer() {
 function gotLocalDescription(description) {
     pc.setLocalDescription(description);
     sendMessage(description);
-	
-	console.log("Local description: ");
-	console.log(description);
+
+    console.log("Local description: ");
+    console.log(description);
 }
 
 function gotIceCandidate(event) {
@@ -116,20 +107,31 @@ socket.on('message', function (message) {
         var candidate = new IceCandidate({sdpMLineIndex: message.label, candidate: message.candidate});
         pc.addIceCandidate(candidate);
     }
-	
-	console.log("Remote description: ");
-	console.log(message);
+
+    console.log("Remote description: ");
+    console.log(message);
 });
 
+
+////////////////////////////////////////////////
+// Text Chat
+var myProfile = {
+    "username": null,
+    "socket": null,
+    "messages": []
+};
+
+
+// TODO: Remove jQuery framework
 jQuery(document).ready(function ($) {
     audio = {
         send_message: new Audio('audio/send-message.mp3'),
         recieve_message: new Audio('audio/recieve-message.mp3')
     };
+
     var $chat = $('#chat');
-    var flag = true;
-    var bm = 0;
-    var botMessages = ['Hello! :)', 'Fuck you!!!', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'];
+
+
     $('#message-form').on("submit", function () {
 
         var message = $('#message').val();
@@ -139,29 +141,11 @@ jQuery(document).ready(function ($) {
             try {
                 socket.emit('chat message', message);
 
-                $chat.append('<li class="text-right"><span><span class="name">Me: </span>' + message + '<span></li>');
+                $chat.append('<li class="text-right"><span><span class="name">You: </span>' + message + '<span></li>');
                 showMessage();
                 $('#message').val('');
                 audio.send_message.volume = 0.3;
                 audio.send_message.play();
-
-                /*if (flag) {
-                 flag = false;
-                 setTimeout(function () {
-                 $chat.append('<li><span><span class="name">Bot: </span>' + botMessages[bm] + '<span></li>');
-                 showMessage();
-                 audio.recieve_message.volume = 0.3;
-                 audio.recieve_message.play();
-                 flag = true;
-                 bm++;
-
-                 if (bm >= botMessages.length)
-                 bm = 0;
-
-                 var h = $chat[0].scrollHeight;
-                 $chat.scrollTop(h);
-                 }, 1000);
-                 }*/
 
                 var h = $chat[0].scrollHeight;
                 $chat.scrollTop(h);
@@ -172,6 +156,7 @@ jQuery(document).ready(function ($) {
         }
         return false;
     });
+
 
     socket.on('chat message', function (msg) {
         setTimeout(function () {
@@ -186,10 +171,96 @@ jQuery(document).ready(function ($) {
         }, 50);
     });
 
+
     var showMessage = function () {
         setTimeout(function () {
             $('li', $chat).addClass('vis');
         }, 100);
     };
 
+
+    ////////////////////////////////////////////////
+    // Login
+    document.querySelector("#login-button").addEventListener("click", event => {
+
+        let username = document.querySelector('#login input#username').value;
+
+        if (username.length < 0 || !username) {
+            alert('Please enter a username!');
+            return;
+        }
+
+        socket.emit('login', {
+            username: username,
+            socket: socket.id
+        });
+
+        // TODO: move it to other place, after server answer
+        myProfile.username = username;
+        myProfile.socket = socket.id;
+
+        console.log(myProfile);
+    });
+
+
+    socket.on('onlogin', async message => {
+
+        if (message.success) {
+            document.querySelector("#login").style.display = 'none';
+            document.querySelector("#chat-container").style.display = 'block';
+
+            let contactList = document.getElementById("contacts");
+            contactList.innerHTML = "";
+
+            message.users.forEach(user => {
+                let userEl = document.createElement("li");
+
+                userEl.innerText = user.username;
+                contactList.appendChild(userEl);
+            });
+        }
+        else {
+            alert("Username already taken. Type new username.");
+        }
+
+    });
+
+
+    socket.on("new user", user => {
+        let contactList = document.getElementById("contacts");
+        let userEl = document.createElement("li");
+
+        userEl.innerText = user.username;
+        contactList.appendChild(userEl);
+    });
+
+    socket.on("remove user", userName => {
+        let userNameList = document.querySelectorAll("#contacts > li");
+        userNameList.forEach(lUser => {
+            if (lUser.innerHTML == userName) {
+                lUser.remove();
+                return;
+            }
+        });
+    });
+
+
+    socket.on("update users", users => {
+        console.log(users);
+
+        let contactList = document.getElementById("contacts");
+        contactList.innerHTML = "";
+
+        users.forEach(user => {
+            let userEl = document.createElement("li");
+
+            userEl.innerText = user.username;
+            contactList.appendChild(userEl);
+        });
+    });
+
+
+    socket.on("server reload", () => {
+        window.location.reload();
+    });
 });
